@@ -29,10 +29,18 @@ jobs:
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npm install --save-dev @capacitor/assets
 
+      - name: Verificar configuração
+        run: |
+          echo "Arquivos do projeto:"
+          ls -la
+          echo ""
+          echo "Capacitor:"
+          cat capacitor.config.ts
+
       - name: Criar projeto Android
         run: npx cap add android
 
-      - name: Criar versão web
+      - name: Gerar versão web
         run: npm run build
 
       - name: Sincronizar Capacitor
@@ -46,18 +54,15 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
 
-          manifest = Path(
-              "android/app/src/main/AndroidManifest.xml"
-          )
-
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
           text = manifest.read_text()
 
-          old = '<activity android:name=".MainActivity"'
-
-          new = '<activity android:name=".MainActivity" android:screenOrientation="landscape"'
-
-          if old in text and 'screenOrientation="landscape"' not in text:
-              text = text.replace(old, new, 1)
+          if 'android:screenOrientation="landscape"' not in text:
+              text = text.replace(
+                  '<activity android:name=".MainActivity"',
+                  '<activity android:name=".MainActivity" android:screenOrientation="landscape"',
+                  1
+              )
 
           manifest.write_text(text)
           PY
