@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Baixar projeto
         uses: actions/checkout@v4
 
@@ -31,11 +30,11 @@ jobs:
 
       - name: Verificar configuração
         run: |
-          echo "Arquivos do projeto:"
-          ls -la
-          echo ""
-          echo "Capacitor:"
+          echo "=== capacitor.config.ts ==="
           cat capacitor.config.ts
+          echo ""
+          echo "=== package.json ==="
+          cat package.json
 
       - name: Criar projeto Android
         run: npx cap add android
